@@ -1,0 +1,15 @@
+{
+	"name": "ml-express/calendar",
+	"type": "library",
+	"description": "Basic calendar functions.",
+	"license": "MIT",
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"ML_Express\\Calendar\\": "src/"
+		}
+	}
+}
