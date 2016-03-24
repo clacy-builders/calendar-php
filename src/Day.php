@@ -4,6 +4,7 @@ namespace ML_Express\Calendar;
 class Day extends \DateTime
 {
 	public $title;
+	public $link;
 	public $states = [];
 	public $regional = [];
 
@@ -16,6 +17,16 @@ class Day extends \DateTime
 	public function setTitle($title)
 	{
 		$this->title = $title;
+		return $this;
+	}
+
+	/**
+	 * Sets the Link.
+	 *
+	 * @param  string  $url
+	 */
+	public function setLink($url) {
+		$this->link = $url;
 		return $this;
 	}
 

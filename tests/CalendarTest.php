@@ -62,230 +62,227 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 
-	/**
-	 * @dataProvider buildArrayProvider
-	 */
-	public function testBuildArray($from, $till, $firstWeekday, $expected)
+	public function testBuildArray()
 	{
-		$actual = Calendar::span($from, $till)->setFirstWeekday($firstWeekday)->buildArray();
-		$this->assertSame($expected, $actual);
-	}
-
-	public function buildArrayProvider()
-	{
-		return array(
-			array(new Day('2015-12-29'), new Day('2016-02-02'), 0, array(
-				'weekdays' => array(
-					'mon' => 'Mon', 'tue' => 'Tue', 'wed' => 'Wed', 'thu' => 'Thu',
-					'fri' => 'Fri', 'sat' => 'Sat', 'sun' => 'Sun'
-				),
-				'years' => array(
-					array(
-						'time' => '2015',
-						'label' => '2015',
-						'months' => array(
-							array(
-								'time' => '2015-12',
-								'label' => 'December',
-								'weeks' => array(
-									array(
-										'time' => '2015-W53',
-										'label' => '53',
-										'days' => array(
-											array(
-												'time' => '2015-12-29',
-												'label' => '29'
-											),
-											array(
-												'time' => '2015-12-30',
-												'label' => '30'
-											),
-											array(
-												'time' => '2015-12-31',
-												'label' => '31'
-											),
-										)
+		$holiday = (new Day('2016-01-30'))->setTitle('International PHP Day');
+		$actual = Calendar::span('2015-12-29', '2016-02-02')->addEntries($holiday)->buildArray();
+		$expected = array(
+			'weekdays' => array(
+				'mon' => 'Mon', 'tue' => 'Tue', 'wed' => 'Wed', 'thu' => 'Thu',
+				'fri' => 'Fri', 'sat' => 'Sat', 'sun' => 'Sun'
+			),
+			'years' => array(
+				array(
+					'time' => '2015',
+					'label' => '2015',
+					'months' => array(
+						array(
+							'time' => '2015-12',
+							'label' => 'December',
+							'weeks' => array(
+								array(
+									'time' => '2015-W53',
+									'label' => '53',
+									'days' => array(
+										array(
+											'time' => '2015-12-29',
+											'label' => '29'
+										),
+										array(
+											'time' => '2015-12-30',
+											'label' => '30'
+										),
+										array(
+											'time' => '2015-12-31',
+											'label' => '31'
+										),
 									)
 								)
 							)
 						)
-					),
-					array(
-						'time' => '2016',
-						'label' => '2016',
-						'months' => array(
-							array(
-								'time' => '2016-01',
-								'label' => 'January',
-								'weeks' => array(
-									array(
-										'time' => '2015-W53',
-										'label' => '53',
-										'days' => array(
-											array(
-												'time' => '2016-01-01',
-												'label' => '1'
-											),
-											array(
-												'time' => '2016-01-02',
-												'label' => '2'
-											),
-											array(
-												'time' => '2016-01-03',
-												'label' => '3'
-											),
-										)
-									),
-									array(
-										'time' => '2016-W01',
-										'label' => '01',
-										'days' => array(
-											array(
-												'time' => '2016-01-04',
-												'label' => '4'
-											),
-											array(
-												'time' => '2016-01-05',
-												'label' => '5'
-											),
-											array(
-												'time' => '2016-01-06',
-												'label' => '6'
-											),
-											array(
-												'time' => '2016-01-07',
-												'label' => '7'
-											),
-											array(
-												'time' => '2016-01-08',
-												'label' => '8'
-											),
-											array(
-												'time' => '2016-01-09',
-												'label' => '9'
-											),
-											array(
-												'time' => '2016-01-10',
-												'label' => '10'
-											),
-										)
-									),
-									array(
-										'time' => '2016-W02',
-										'label' => '02',
-										'days' => array(
-											array(
-												'time' => '2016-01-11',
-												'label' => '11'
-											),
-											array(
-												'time' => '2016-01-12',
-												'label' => '12'
-											),
-											array(
-												'time' => '2016-01-13',
-												'label' => '13'
-											),
-											array(
-												'time' => '2016-01-14',
-												'label' => '14'
-											),
-											array(
-												'time' => '2016-01-15',
-												'label' => '15'
-											),
-											array(
-												'time' => '2016-01-16',
-												'label' => '16'
-											),
-											array(
-												'time' => '2016-01-17',
-												'label' => '17'
-											),
-										)
-									),
-									array(
-										'time' => '2016-W03',
-										'label' => '03',
-										'days' => array(
-											array(
-												'time' => '2016-01-18',
-												'label' => '18'
-											),
-											array(
-												'time' => '2016-01-19',
-												'label' => '19'
-											),
-											array(
-												'time' => '2016-01-20',
-												'label' => '20'
-											),
-											array(
-												'time' => '2016-01-21',
-												'label' => '21'
-											),
-											array(
-												'time' => '2016-01-22',
-												'label' => '22'
-											),
-											array(
-												'time' => '2016-01-23',
-												'label' => '23'
-											),
-											array(
-												'time' => '2016-01-24',
-												'label' => '24'
-											),
-										)
-									),
-									array(
-										'time' => '2016-W04',
-										'label' => '04',
-										'days' => array(
-											array(
-												'time' => '2016-01-25',
-												'label' => '25'
-											),
-											array(
-												'time' => '2016-01-26',
-												'label' => '26'
-											),
-											array(
-												'time' => '2016-01-27',
-												'label' => '27'
-											),
-											array(
-												'time' => '2016-01-28',
-												'label' => '28'
-											),
-											array(
-												'time' => '2016-01-29',
-												'label' => '29'
-											),
-											array(
-												'time' => '2016-01-30',
-												'label' => '30'
-											),
-											array(
-												'time' => '2016-01-31',
-												'label' => '31'
-											),
-										)
+					)
+				),
+				array(
+					'time' => '2016',
+					'label' => '2016',
+					'months' => array(
+						array(
+							'time' => '2016-01',
+							'label' => 'January',
+							'weeks' => array(
+								array(
+									'time' => '2015-W53',
+									'label' => '53',
+									'days' => array(
+										array(
+											'time' => '2016-01-01',
+											'label' => '1'
+										),
+										array(
+											'time' => '2016-01-02',
+											'label' => '2'
+										),
+										array(
+											'time' => '2016-01-03',
+											'label' => '3'
+										),
+									)
+								),
+								array(
+									'time' => '2016-W01',
+									'label' => '01',
+									'days' => array(
+										array(
+											'time' => '2016-01-04',
+											'label' => '4'
+										),
+										array(
+											'time' => '2016-01-05',
+											'label' => '5'
+										),
+										array(
+											'time' => '2016-01-06',
+											'label' => '6'
+										),
+										array(
+											'time' => '2016-01-07',
+											'label' => '7'
+										),
+										array(
+											'time' => '2016-01-08',
+											'label' => '8'
+										),
+										array(
+											'time' => '2016-01-09',
+											'label' => '9'
+										),
+										array(
+											'time' => '2016-01-10',
+											'label' => '10'
+										),
+									)
+								),
+								array(
+									'time' => '2016-W02',
+									'label' => '02',
+									'days' => array(
+										array(
+											'time' => '2016-01-11',
+											'label' => '11'
+										),
+										array(
+											'time' => '2016-01-12',
+											'label' => '12'
+										),
+										array(
+											'time' => '2016-01-13',
+											'label' => '13'
+										),
+										array(
+											'time' => '2016-01-14',
+											'label' => '14'
+										),
+										array(
+											'time' => '2016-01-15',
+											'label' => '15'
+										),
+										array(
+											'time' => '2016-01-16',
+											'label' => '16'
+										),
+										array(
+											'time' => '2016-01-17',
+											'label' => '17'
+										),
+									)
+								),
+								array(
+									'time' => '2016-W03',
+									'label' => '03',
+									'days' => array(
+										array(
+											'time' => '2016-01-18',
+											'label' => '18'
+										),
+										array(
+											'time' => '2016-01-19',
+											'label' => '19'
+										),
+										array(
+											'time' => '2016-01-20',
+											'label' => '20'
+										),
+										array(
+											'time' => '2016-01-21',
+											'label' => '21'
+										),
+										array(
+											'time' => '2016-01-22',
+											'label' => '22'
+										),
+										array(
+											'time' => '2016-01-23',
+											'label' => '23'
+										),
+										array(
+											'time' => '2016-01-24',
+											'label' => '24'
+										),
+									)
+								),
+								array(
+									'time' => '2016-W04',
+									'label' => '04',
+									'days' => array(
+										array(
+											'time' => '2016-01-25',
+											'label' => '25'
+										),
+										array(
+											'time' => '2016-01-26',
+											'label' => '26'
+										),
+										array(
+											'time' => '2016-01-27',
+											'label' => '27'
+										),
+										array(
+											'time' => '2016-01-28',
+											'label' => '28'
+										),
+										array(
+											'time' => '2016-01-29',
+											'label' => '29'
+										),
+										array(
+											'time' => '2016-01-30',
+											'label' => '30',
+											'entries' => array(
+												array(
+													'class' => 'holiday',
+													'title' => 'International PHP Day'
+												)
+											)
+										),
+										array(
+											'time' => '2016-01-31',
+											'label' => '31'
+										),
 									)
 								)
-							),
-							array(
-								'time' => '2016-02',
-								'label' => 'February',
-								'weeks' => array(
-									array(
-										'time' => '2016-W05',
-										'label' => '05',
-										'days' => array(
-											array(
-												'time' => '2016-02-01',
-												'label' => '1'
-											)
+							)
+						),
+						array(
+							'time' => '2016-02',
+							'label' => 'February',
+							'weeks' => array(
+								array(
+									'time' => '2016-W05',
+									'label' => '05',
+									'days' => array(
+										array(
+											'time' => '2016-02-01',
+											'label' => '1'
 										)
 									)
 								)
@@ -293,7 +290,8 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 						)
 					)
 				)
-			)),
+			)
 		);
+		$this->assertSame($expected, $actual);
 	}
 }

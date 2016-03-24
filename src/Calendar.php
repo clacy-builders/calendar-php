@@ -180,7 +180,29 @@ class Calendar
 	}
 
 	/**
-	 * The bais to generate output.
+	 * Adds calendar entries (for example holidays).
+	 *
+	 * @param  Day[]   $entries
+	 * @param  string  $class
+	 * @return Calendar
+	 */
+	public function addEntries($entries, $class = 'holiday')
+	{
+		if (!\is_array($entries)) {
+			$entries = [$entries];
+		}
+		foreach ($entries as $entry) {
+			$this->entries[$entry->format('Y-m-d')][] = array_filter(array(
+				'class' => $class,
+				'title' => $entry->title,
+				'link' => $entry->link
+			));
+		}
+		return $this;
+	}
+
+	/**
+	 * The basis to generate your output.
 	 *
 	 * Keys: <code>weekdays</code>, <code>years</code><br>
 	 * Keys for <code>years</code> items:
@@ -239,10 +261,12 @@ class Calendar
 				$array['years'][$yi]['months'][$mi]['weeks'][++$wi] = $week;
 			}
 			// day
-			$array['years'][$yi]['months'][$mi]['weeks'][$wi]['days'][] = array(
+			$entries = \array_key_exists($iso, $this->entries) ? $this->entries[$iso] : null;
+			$array['years'][$yi]['months'][$mi]['weeks'][$wi]['days'][] = array_filter(array(
 				'time' => $iso,
-				'label' => $day->formatLoc($this->dayFormat)
-			);
+				'label' => $day->formatLoc($this->dayFormat),
+				'entries' => $entries
+			));
 			$day->addDays(1);
 			$first = false;
 		}
