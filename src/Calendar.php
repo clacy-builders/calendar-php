@@ -14,6 +14,7 @@ class Calendar
 	protected $yearFormat;
 	protected $weekdayFormat;
 
+	protected $entries;
 	protected $weekdays;
 	protected $buildWeekdays;
 
@@ -25,12 +26,13 @@ class Calendar
 	 * @param  Day|string  $from  First day which should be shown on the calendar.<br>
 	 *                            A string of the format <code>Y-m-d</code> or a
 	 *                            <code>DateTime</code> object.
-	 * @param  Day|string  $till  Day after the last day which should be shown on the calendar.
+	 * @param  Day|string  $till  Last day which should be shown on the calendar.
 	 */
 	public function __construct($from, $till)
 	{
 		$this->from = \is_string($from) ? new Day($from) : $from;
 		$this->till = \is_string($till) ? new Day($till) : $till;
+		$this->entries = [];
 		$this->setDayFormat()->setMonthFormat()->setYearFormat()->setWeekdayFormat();
 		$this->setFirstWeekday();
 	}
@@ -61,8 +63,7 @@ class Calendar
 			$year = date('Y');
 		}
 		$from = new Day("$year-01-01");
-		$year++;
-		$till = new Day("$year-01-01");
+		$till = $from->copy()->addYears(1)->addDays(-1);
 		return new Calendar($from, $till);
 	}
 
@@ -75,15 +76,7 @@ class Calendar
 	 */
 	public static function month($month = null, $year = null)
 	{
-		if (\is_null($month)) {
-			$month = date('m');
-		}
-		if (\is_null($year)) {
-			$year = date('Y');
-		}
-		$from = new Day("$year-$month-01");
-		$till = $from->copy()->modify('+1 month');
-		return new Calendar($from, $till);
+		return self::months(0, $month, $year);
 	}
 
 	/**
@@ -97,14 +90,22 @@ class Calendar
 	 */
 	public static function months($delta = 0, $month = null, $year = null)
 	{
-		$calendar = self::month($month, $year);
+	if (\is_null($month)) {
+			$month = date('m');
+		}
+		if (\is_null($year)) {
+			$year = date('Y');
+		}
+		$from = new Day("$year-$month-01");
+		$till = $from->copy()->addMonths(1);
 		if ($delta > 0) {
-			$calendar->till->addMonths($delta);
+			$till->addMonths($delta);
 		}
 		else if ($delta < 0) {
-			$calendar->from->addMonths($delta);
+			$from->addMonths($delta);
 		}
-		return $calendar;
+		$till->addDays(-1);
+		return new Calendar($from, $till);
 	}
 
 	/**
@@ -205,14 +206,17 @@ class Calendar
 	 * The basis to generate your output.
 	 *
 	 * Keys: <code>weekdays</code>, <code>years</code><br>
-	 * Keys for <code>years</code> items:
+	 * Keys for <code>years</code> array items:
 	 * <code>time</code>, <code>label</code>, <code>months</code><br>
-	 * Keys for <code>months</code> items:
+	 * Keys for <code>months</code> array items:
 	 * <code>time</code>, <code>label</code>, <code>weeks</code><br>
-	 * Keys for <code>weeks</code> items:
-	 * <code>time</code>, <code>label</code>, <code>days</code><br>
-	 * Keys for <code>days</code> items:
-	 * <code>time</code>, <code>label</code>
+	 * Keys for <code>weeks</code> array items:
+	 * <code>time</code>, <code>label</code>, <code>leading</code>, <code>following</code>,
+	 * <code>days</code><br>
+	 * Keys for <code>days</code> array items:
+	 * <code>time</code>, <code>label</code>, <code>entries</code><br>
+	 * Keys for <code>entries</code> array items:
+	 * <code>title</code>, <code>link</code>
 	 *
 	 * @return array
 	 */
@@ -225,8 +229,8 @@ class Calendar
 		);
 		$day = $this->from->copy();
 		$first = true;
-		$yi = $mi = $wi = $di = -1;
-		while ($day != $this->till) {
+		$last = false;
+		while (!$last) {
 			$iso = $day->format('Y-m-d');
 			$wd = ((int) $day->format('N') - $this->firstWeekday + 6) % 7;
 			$d = (int) $day->format('d');
@@ -234,39 +238,56 @@ class Calendar
 			$t = $day->format('t');
 			$y = $day->format('Y');
 			$w = $day->format('o-\WW');
-			// new year?
-			if (($d == 1 && $m == 1) || $first) {
-				$mi = -1; $wi = -1;
-				$array['years'][++$yi] = array(
+			$last = $day == $this->till;
+
+			// first day in year
+			if ($first || ($d == 1 && $m == 1)) {
+				$year = array(
 					'time' => $y,
 					'label' => $day->formatLoc($this->yearFormat),
-					'months' =>[]
+					'months' => []
 				);
 			}
-			// new month or first day?
-			if ($d == 1 || $first) {
-				$wi = -1;
-				$array['years'][$yi]['months'][++$mi] = array(
+			// first day in month
+			if ($first || $d == 1) {
+				$month = array(
 					'time' => "$y-$m",
-					'label' => $day->formatLoc($this->monthFormat)
+					'label' => $day->formatLoc($this->monthFormat),
+					'weeks' => []
 				);
 			}
-			// new week
-			if ($wd == 0 || $d == 1 || $first) {
+			// first day in week
+			if ($first || $wd == 0 || $d == 1) {
 				$week = [];
 				if ($this->firstWeekday == 0) {
 					$week['time'] = $w;
 					$week['label'] = $day->format('W');
 				}
-				$array['years'][$yi]['months'][$mi]['weeks'][++$wi] = $week;
+				$week['leading'] = $wd;
+				$week['following'] = null;
+				$week['days'] = [];
 			}
 			// day
-			$entries = \array_key_exists($iso, $this->entries) ? $this->entries[$iso] : null;
-			$array['years'][$yi]['months'][$mi]['weeks'][$wi]['days'][] = array_filter(array(
+			$week['days'][] = array_filter(array(
 				'time' => $iso,
 				'label' => $day->formatLoc($this->dayFormat),
-				'entries' => $entries
+				'entries' => \array_key_exists($iso, $this->entries) ? $this->entries[$iso] : null
 			));
+			// last day in week
+			if ($last || $wd == 6 || $d == $t) {
+				if ($wd < 6) {
+					$week['following'] = 6 - $wd;
+				}
+				$month['weeks'][] = array_filter($week);
+			}
+			// last day in month
+			if ($last || $d == $t) {
+				$year['months'][] = array_filter($month);
+			}
+			// last day in year
+			if ($last || ($m == 12 && $d == $t)) {
+				$array['years'][] = array_filter($year);
+			}
 			$day->addDays(1);
 			$first = false;
 		}
