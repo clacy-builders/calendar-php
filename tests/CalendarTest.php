@@ -89,6 +89,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 						array(
 							'time' => '2015-12',
 							'label' => 'December',
+							'month' => '12',
 							'weeks' => array(
 								array(
 									'time' => '2015-W53',
@@ -98,15 +99,18 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2015-12-29',
-											'label' => '29'
+											'label' => '29',
+											'weekday' => 'tue'
 										),
 										array(
 											'time' => '2015-12-30',
-											'label' => '30'
+											'label' => '30',
+											'weekday' => 'wed'
 										),
 										array(
 											'time' => '2015-12-31',
-											'label' => '31'
+											'label' => '31',
+											'weekday' => 'thu'
 										),
 									)
 								)
@@ -121,6 +125,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 						array(
 							'time' => '2016-01',
 							'label' => 'January',
+							'month' => '01',
 							'weeks' => array(
 								array(
 									'time' => '2015-W53',
@@ -129,15 +134,18 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2016-01-01',
-											'label' => '1'
+											'label' => '1',
+											'weekday' => 'fri'
 										),
 										array(
 											'time' => '2016-01-02',
-											'label' => '2'
+											'label' => '2',
+											'weekday' => 'sat'
 										),
 										array(
 											'time' => '2016-01-03',
-											'label' => '3'
+											'label' => '3',
+											'weekday' => 'sun'
 										),
 									)
 								),
@@ -147,31 +155,38 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2016-01-04',
-											'label' => '4'
+											'label' => '4',
+											'weekday' => 'mon'
 										),
 										array(
 											'time' => '2016-01-05',
-											'label' => '5'
+											'label' => '5',
+											'weekday' => 'tue'
 										),
 										array(
 											'time' => '2016-01-06',
-											'label' => '6'
+											'label' => '6',
+											'weekday' => 'wed'
 										),
 										array(
 											'time' => '2016-01-07',
-											'label' => '7'
+											'label' => '7',
+											'weekday' => 'thu'
 										),
 										array(
 											'time' => '2016-01-08',
-											'label' => '8'
+											'label' => '8',
+											'weekday' => 'fri'
 										),
 										array(
 											'time' => '2016-01-09',
-											'label' => '9'
+											'label' => '9',
+											'weekday' => 'sat'
 										),
 										array(
 											'time' => '2016-01-10',
-											'label' => '10'
+											'label' => '10',
+											'weekday' => 'sun'
 										),
 									)
 								),
@@ -181,31 +196,38 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2016-01-11',
-											'label' => '11'
+											'label' => '11',
+											'weekday' => 'mon'
 										),
 										array(
 											'time' => '2016-01-12',
-											'label' => '12'
+											'label' => '12',
+											'weekday' => 'tue'
 										),
 										array(
 											'time' => '2016-01-13',
-											'label' => '13'
+											'label' => '13',
+											'weekday' => 'wed'
 										),
 										array(
 											'time' => '2016-01-14',
-											'label' => '14'
+											'label' => '14',
+											'weekday' => 'thu'
 										),
 										array(
 											'time' => '2016-01-15',
-											'label' => '15'
+											'label' => '15',
+											'weekday' => 'fri'
 										),
 										array(
 											'time' => '2016-01-16',
-											'label' => '16'
+											'label' => '16',
+											'weekday' => 'sat'
 										),
 										array(
 											'time' => '2016-01-17',
-											'label' => '17'
+											'label' => '17',
+											'weekday' => 'sun'
 										),
 									)
 								),
@@ -215,31 +237,38 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2016-01-18',
-											'label' => '18'
+											'label' => '18',
+											'weekday' => 'mon'
 										),
 										array(
 											'time' => '2016-01-19',
-											'label' => '19'
+											'label' => '19',
+											'weekday' => 'tue'
 										),
 										array(
 											'time' => '2016-01-20',
-											'label' => '20'
+											'label' => '20',
+											'weekday' => 'wed'
 										),
 										array(
 											'time' => '2016-01-21',
-											'label' => '21'
+											'label' => '21',
+											'weekday' => 'thu'
 										),
 										array(
 											'time' => '2016-01-22',
-											'label' => '22'
+											'label' => '22',
+											'weekday' => 'fri'
 										),
 										array(
 											'time' => '2016-01-23',
-											'label' => '23'
+											'label' => '23',
+											'weekday' => 'sat'
 										),
 										array(
 											'time' => '2016-01-24',
-											'label' => '24'
+											'label' => '24',
+											'weekday' => 'sun'
 										),
 									)
 								),
@@ -249,27 +278,33 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2016-01-25',
-											'label' => '25'
+											'label' => '25',
+											'weekday' => 'mon'
 										),
 										array(
 											'time' => '2016-01-26',
-											'label' => '26'
+											'label' => '26',
+											'weekday' => 'tue'
 										),
 										array(
 											'time' => '2016-01-27',
-											'label' => '27'
+											'label' => '27',
+											'weekday' => 'wed'
 										),
 										array(
 											'time' => '2016-01-28',
-											'label' => '28'
+											'label' => '28',
+											'weekday' => 'thu'
 										),
 										array(
 											'time' => '2016-01-29',
-											'label' => '29'
+											'label' => '29',
+											'weekday' => 'fri'
 										),
 										array(
 											'time' => '2016-01-30',
 											'label' => '30',
+											'weekday' => 'sat',
 											'entries' => array(
 												array(
 													'class' => 'holiday',
@@ -279,7 +314,8 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 										),
 										array(
 											'time' => '2016-01-31',
-											'label' => '31'
+											'label' => '31',
+											'weekday' => 'sun'
 										),
 									)
 								)
@@ -288,6 +324,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 						array(
 							'time' => '2016-02',
 							'label' => 'February',
+							'month' => '02',
 							'weeks' => array(
 								array(
 									'time' => '2016-W05',
@@ -296,7 +333,8 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 									'days' => array(
 										array(
 											'time' => '2016-02-01',
-											'label' => '1'
+											'label' => '1',
+											'weekday' => 'mon'
 										)
 									)
 								)

@@ -209,12 +209,12 @@ class Calendar
 	 * Keys for <code>years</code> array items:
 	 * <code>time</code>, <code>label</code>, <code>months</code><br>
 	 * Keys for <code>months</code> array items:
-	 * <code>time</code>, <code>label</code>, <code>weeks</code><br>
+	 * <code>time</code>, <code>label</code>, <code>month</code>, <code>weeks</code><br>
 	 * Keys for <code>weeks</code> array items:
 	 * <code>time</code>, <code>label</code>, <code>leading</code>, <code>following</code>,
 	 * <code>days</code><br>
 	 * Keys for <code>days</code> array items:
-	 * <code>time</code>, <code>label</code>, <code>entries</code><br>
+	 * <code>time</code>, <code>label</code>, <code>weekday</code>, <code>entries</code><br>
 	 * Keys for <code>entries</code> array items:
 	 * <code>title</code>, <code>link</code>
 	 *
@@ -235,9 +235,9 @@ class Calendar
 			$wd = ((int) $day->format('N') - $this->firstWeekday + 6) % 7;
 			$d = (int) $day->format('d');
 			$m = $day->format('m');
-			$t = $day->format('t');
+			$t = $day->format('t'); // last day in month: 28, 29, 30, 31
 			$y = $day->format('Y');
-			$w = $day->format('o-\WW');
+			$w = $day->format('o-\WW'); // 2015-W53, 2016-W01 etc.
 			$last = $day == $this->till;
 
 			// first day in year
@@ -253,6 +253,7 @@ class Calendar
 				$month = array(
 					'time' => "$y-$m",
 					'label' => $day->formatLoc($this->monthFormat),
+					'month' => $m,
 					'weeks' => []
 				);
 			}
@@ -271,6 +272,7 @@ class Calendar
 			$week['days'][] = array_filter(array(
 				'time' => $iso,
 				'label' => $day->formatLoc($this->dayFormat),
+				'weekday' => \strtolower($day->format('D')),
 				'entries' => \array_key_exists($iso, $this->entries) ? $this->entries[$iso] : null
 			));
 			// last day in week
