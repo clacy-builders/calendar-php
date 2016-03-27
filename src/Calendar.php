@@ -76,20 +76,23 @@ class Calendar
 	 */
 	public static function month($month = null, $year = null)
 	{
-		return self::months(0, $month, $year);
+		return self::months(1, $month, $year);
 	}
 
 	/**
 	 * Returns a <code>Calendar</code> object for multiple months.
 	 *
-	 * @param  int  $delta  -2: The current or given month and the previous two months.<br>
-	 *                      +2: The current or given month and the next two months.
+	 * @param  int  $count  <= -2: The previous <code>$count</code> months
+	 *                      (including the current or given month). <br>
+	 *                      >= +2: The next <code>$count</code> months
+	 *                      (including the current or given month).
 	 * @param  int  $month  The current month if omitted.
 	 * @param  int  $year   The current year if omitted.
 	 * @return Calendar
 	 */
-	public static function months($delta = 0, $month = null, $year = null)
+	public static function months($count = 1, $month = null, $year = null)
 	{
+	$delta = (abs($count) - 1) * (($count > 0) - ($count < 0));
 	if (\is_null($month)) {
 			$month = date('m');
 		}

@@ -60,13 +60,19 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 	public function monthsProvider()
 	{
 		return array(
-			[+0, null, null, Calendar::span(
+			[0, null, null, Calendar::span(
 					Day::FirstOfThisMonth(),
 					Day::FirstOfThisMonth(1)->addDays(-1))],
-			[-2, null, null, Calendar::span(
-					Day::FirstOfThisMonth(-2),
+			[-1, null, null, Calendar::span(
+					Day::FirstOfThisMonth(),
 					Day::FirstOfThisMonth(1)->addDays(-1))],
 			[+1, null, null, Calendar::span(
+					Day::FirstOfThisMonth(),
+					Day::FirstOfThisMonth(1)->addDays(-1))],
+			[-3, null, null, Calendar::span(
+					Day::FirstOfThisMonth(-2),
+					Day::FirstOfThisMonth(1)->addDays(-1))],
+			[+2, null, null, Calendar::span(
 					Day::FirstOfThisMonth(),
 					Day::FirstOfThisMonth(2)->addDays(-1))]
 		);
