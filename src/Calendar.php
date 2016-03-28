@@ -92,8 +92,8 @@ class Calendar
 	 */
 	public static function months($count = 1, $month = null, $year = null)
 	{
-	$delta = (abs($count) - 1) * (($count > 0) - ($count < 0));
-	if (\is_null($month)) {
+		$delta = (abs($count) - 1) * (($count > 0) - ($count < 0));
+		if (\is_null($month)) {
 			$month = date('m');
 		}
 		if (\is_null($year)) {
