@@ -65,3 +65,7 @@ $day = (new Day('2015-12-03'))
         ->setTitle('PHP 7.0 released')
         ->setLink('http://php.net/manual/en/migration70.new-features.php');
 ```
+
+
+### The `Calendar` class
+See https://github.com/ml-express/html5-express-php/wiki/Calendar
