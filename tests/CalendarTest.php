@@ -20,9 +20,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 	public function yearProvider()
 	{
 		return array(
-			[null, Calendar::span(
-					Day::FirstOfThisYear(),
-					Day::FirstOfThisYear(1)->addDays(-1))],
+			[null, Calendar::span(Day::create(1, 1), Day::create(31, 12))],
 			[2016, Calendar::span('2016-01-01', '2016-12-31')]
 		);
 	}
@@ -41,8 +39,8 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 		$year = date('Y');
 		return array(
 			[null, null, Calendar::span(
-					Day::FirstOfThisMonth(),
-					Day::FirstOfThisMonth(1)->addDays(-1))],
+					Day::create(1),
+					Day::create(1)->modify('last day of this month'))],
 			[4, null, Calendar::span("$year-04-01", "$year-04-30")],
 			[2, 2016, Calendar::span("2016-02-01", "2016-02-29")]
 		);
@@ -61,20 +59,20 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			[0, null, null, Calendar::span(
-					Day::FirstOfThisMonth(),
-					Day::FirstOfThisMonth(1)->addDays(-1))],
+					Day::create(1),
+					Day::create(1)->modify('last day of this month'))],
 			[-1, null, null, Calendar::span(
-					Day::FirstOfThisMonth(),
-					Day::FirstOfThisMonth(1)->addDays(-1))],
+					Day::create(1),
+					Day::create(1)->modify('last day of this month'))],
 			[+1, null, null, Calendar::span(
-					Day::FirstOfThisMonth(),
-					Day::FirstOfThisMonth(1)->addDays(-1))],
+					Day::create(1),
+					Day::create(1)->modify('last day of this month'))],
 			[-3, null, null, Calendar::span(
-					Day::FirstOfThisMonth(-2),
-					Day::FirstOfThisMonth(1)->addDays(-1))],
+					Day::create(1)->addMonths(-2),
+					Day::create(1)->modify('last day of this month'))],
 			[+2, null, null, Calendar::span(
-					Day::FirstOfThisMonth(),
-					Day::FirstOfThisMonth(2)->addDays(-1))]
+					Day::create(1),
+					Day::create(1)->addMonths(1)->modify('last day of this month'))]
 		);
 	}
 

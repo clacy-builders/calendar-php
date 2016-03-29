@@ -59,10 +59,7 @@ class Calendar
 	 */
 	public static function year($year = null)
 	{
-		if (\is_null($year)) {
-			$year = date('Y');
-		}
-		$from = new Day("$year-01-01");
+		$from = Day::create(1, 1, $year);
 		$till = $from->copy()->addYears(1)->addDays(-1);
 		return new Calendar($from, $till);
 	}
@@ -93,13 +90,7 @@ class Calendar
 	public static function months($count = 1, $month = null, $year = null)
 	{
 		$delta = (abs($count) - 1) * (($count > 0) - ($count < 0));
-		if (\is_null($month)) {
-			$month = date('m');
-		}
-		if (\is_null($year)) {
-			$year = date('Y');
-		}
-		$from = new Day("$year-$month-01");
+		$from = Day::create(1, $month, $year);
 		$till = $from->copy()->addMonths(1);
 		if ($delta > 0) {
 			$till->addMonths($delta);

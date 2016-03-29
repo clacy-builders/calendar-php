@@ -1,7 +1,7 @@
 {
 	"name": "ml-express/calendar",
 	"type": "library",
-	"description": "Basic calendar functions.",
+	"description": "Basic calendar classes.",
 	"license": "MIT",
 	"minimum-stability": "dev",
 	"require": {

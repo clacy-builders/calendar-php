@@ -21,34 +21,72 @@ Run `composer install` or `composer update`.
 
 ### The `Day` class
 
+```php
+require_once 'vendor/autoload.php';
+use \ML_Express\Calendar\Day;
+```
+
+
 #### Constructor
 
-`Day` extends the standard PHP class `DateTime`:
-
+`Day` extends the standard PHP class `DateTime`.
+Assuming that current date is 2016-03-29:
 ```php
-use \ML_Express\Calendar\Day;
+$days[] = new Day('2016-03-29');
+$days[] = new Day();
+$days[] = new Day('first day of next month');
+```
 
-$day = new Day('2016-03-29');
-$day = new Day();             // today
+The result:
+
+```
+2016-03-29
+2016-03-29
+2016-04-01
+
 ```
 
 
 #### Factory Methods
-Assuming, current date is 2016-03-29
+Assuming that current date is 2016-03-29:
 ```php
-$day = Day::FirstOfThisYear();    // 2016-01-01
-$day = Day::FirstOfThisYear(1);   // 2017-01-01
-$day = Day::FirstOfThisMonth();   // 2016-03-01
-$day = Day::FirstOfThisMonth(-1); // 2016-02-01
-$day = Day::easter(2016);         // 2016-03-27
+$days[] = Day::create(29, 3, 2016);
+$days[] = Day::create(29, 3);
+$days[] = Day::create(29);
+$days[] = Day::create();
+$days[] = Day::create('2016-05-01');
+$days[] = Day::create('last day of previous month');
+$days[] = Day::easter(2016);
+```
+
+The result:
+
+```
+2016-03-29
+2016-03-29
+2016-03-29
+2016-03-29
+2016-05-01
+2016-02-29
+2016-03-27
+
 ```
 
 
 #### Modify Dates
 ```php
-$day = (new Day('2016-03-29'))->addYears(2);   // 2018-03-29
-$day = (new Day('2016-03-29'))->addMonths(-2); // 2016-01-29
-$day = (new Day('2016-03-29'))->addDays(3);    // 2018-04-01
+$days[] = Day::create('2016-03-29')->addYears(2);
+$days[] = Day::create('2016-03-29')->addMonths(-2);
+$days[] = Day::create('2016-03-29')->addDays(3);
+```
+
+The result:
+
+```
+2018-03-29
+2016-01-29
+2016-04-01
+
 ```
 
 
@@ -58,14 +96,45 @@ $easter = Day::easter(2016);
 $pentecost = $easter->copy()->addDays(49);
 ```
 
+The result:
+
+```
+2016-03-27
+2016-05-15
+
+```
+
 
 #### Set title and link
 ```php
-$day = (new Day('2015-12-03'))
+$day = Day::create('2015-12-03')
         ->setTitle('PHP 7.0 released')
         ->setLink('http://php.net/manual/en/migration70.new-features.php');
+```
+
+The result:
+
+```
+2015-12-03    PHP 7.0 released
+              http://php.net/manual/en/migration70.new-features.php
+
+```
+
+
+#### The `formatLoc` method
+```php
+setlocale(LC_TIME, 'de');
+$date = Day::create('2016-06-05');
+print $date->formatLoc('%A, %#d. %B %Y');
+```
+
+The result:
+
+```
+Sonntag, 5. Juni 2016
 ```
 
 
 ### The `Calendar` class
 See https://github.com/ml-express/html5-express-php/wiki/Calendar
+

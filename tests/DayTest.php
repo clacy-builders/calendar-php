@@ -7,89 +7,100 @@ use ML_Express\Calendar\Day;
 
 class DayTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @dataProvider firstOfThisYearProvider
-	 */
-	public function testFirstOfThisYear($delta, $expected)
+	public function testSetTitle()
 	{
-		$actual = Day::FirstOfThisYear($delta);
+		$actual = Day::create(1, 1, 2016)->setTitle('Packagist');
+		$this->assertEquals('Packagist', $actual->title);
+	}
+
+	public function testSetLink()
+	{
+		$actual = Day::create(1, 1, 2016)->setLink('https://packagist.org/');
+		$this->assertEquals('https://packagist.org/', $actual->link);
+	}
+
+	public function testAddDays()
+	{
+		$actual = Day::create(1, 1, 2016)->addDays(-1)->addDays(2);
+		$expected = Day::create(2, 1, 2016);
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function firstOfThisYearProvider()
+	public function testAddMonths()
 	{
-		$year = date('Y');
-		return array(
-			[0, new Day($year . '-01-01')],
-			[1, new Day((1 + $year) . '-01-01')],
-			[2, new Day((2 + $year) . '-01-01')],
-			[-1, new Day((-1 + $year) . '-01-01')],
-			[-2, new Day((-2 + $year) . '-01-01')]
-		);
-	}
-
-	/**
-	 * @dataProvider firstOfThisMonthProvider
-	 */
-	public function testFirstOfThisMonth($delta, $expected)
-	{
-		$actual = Day::FirstOfThisMonth($delta);
+		$actual = Day::create(31, 1, 2016)->addMonths(1)->addMonths(-2);
+		$expected = Day::create(2, 1, 2016);
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function firstOfThisMonthProvider()
+	public function testAddYears()
 	{
-		return array(
-			[0, new Day(date('Y-m-01'))],
-			[1, (new Day(date('Y-m-01')))->modify('+1 month')],
-			[2, (new Day(date('Y-m-01')))->modify('+2 month')],
-			[-1, (new Day(date('Y-m-01')))->modify('-1 month')],
-			[-2, (new Day(date('Y-m-01')))->modify('-2 month')]
-		);
-	}
-
-	/**
-	 * @dataProvider createDayListProvider
-	 */
-	public function xtestCreateDayList($state, $expected)
-	{
-		$defs = '[
-			{"type": "fixed", "date": "04-01", "title": "FooDay", "states": ["foo"], "regional": ["foo"]},
-			{"type": "fixed", "date": "04-01", "title": "BarDay", "states": ["bar"], "regional": ["bar"]},
-			{"type": "fixed", "date": "04-01", "title": "BazDay", "states": ["baz"], "regional": ["baz"]},
-			{"type": "modified", "date": "04-01", "modify": "next sunday", "title": "PHP Day", "states": ["foo", "bar"]},
-			{"type": "easter-dependent", "delta": -2, "title": "PHP Day"}
-		]';
-		$actual = Day::createDayList(\json_decode($defs, true), 2016, $state);
+		$actual = Day::create(29, 2, 2016)->addYears(1)->addYears(-2);
+		$expected = Day::create(1, 3, 2015);
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function createDayListProvider()
+	/**
+	 * @dataProvider formatLocProvider
+	 */
+	public function testFormatLoc($format, $expected)
 	{
-		return array(
-			array(
-				null, array(
-					'2016-04-01' => array(
-						(new Day('2016-04-01'))->setTitle('FooDay')->setStates(['foo'], ['foo']),
-						(new Day('2016-04-01'))->setTitle('BarDay')->setStates(['bar'], ['bar']),
-						(new Day('2016-04-01'))->setTitle('BazDay')->setStates(['baz'], ['baz'])
-					),
-					'2016-04-03' => (new Day('2016-04-03'))->setTitle('PHP Day')->setStates(['foo', 'bar']),
-					'2016-03-25' => (new Day('2016-03-25'))->setTitle('PHP Day')
-				)
-			),
-			array(
-				'foo', array(
-					'2016-04-01' => (new Day('2016-04-01'))->setTitle('FooDay')->setStates(['foo'], ['foo']),
-					'2016-04-03' => (new Day('2016-04-03'))->setTitle('PHP Day')->setStates(['foo', 'bar']),
-					'2016-03-25' => (new Day('2016-03-25'))->setTitle('PHP Day')
-				)
-			),
-			array(
-				'whatever', array(
-					'2016-03-25' => (new Day('2016-03-25'))->setTitle('PHP Day')
-				)
-			)
-		);
+		$actual = Day::create(1, 4, 2016)->formatLoc($format);
+		$this->assertSame($expected, $actual);
+	}
+
+	public function formatLocProvider()
+	{
+		return [['%a', 'Fri'],
+				['%A', 'Friday'],
+				['%d', '01'],
+				['%#d', '1'],
+				['%b', 'Apr'],
+				['%B', 'April'],
+				['%m', '04'],
+				['%#m', '4'],
+				['%Y', '2016'],
+				['%y', '16']];
+	}
+
+	public function testCopy()
+	{
+		$this->assertEquals(Day::create(29, 3, 2016)->copy(), new Day('2016-03-29'));
+	}
+
+	/**
+	 * @dataProvider createProvider
+	 */
+	public function testCreate($day, $month, $year, $expected)
+	{
+		$actual = Day::create($day, $month, $year);
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function createProvider()
+	{
+		return [[null, null, null, new Day(date('Y-m-d'))],
+				[1, null, null, new Day(date('Y-m-01'))],
+				[1, 2, null, new Day(date('Y-02-01'))],
+				[2, 3, 2016, new Day('2016-03-02')],
+				['2016-01-02', null, null, new Day('2016-01-02')]
+		];
+	}
+
+	/**
+	 * @dataProvider easterProvider
+	 */
+	public function testEaster($year, $expected)
+	{
+		$actual = Day::easter($year);
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function easterProvider()
+	{
+		return [[2014, Day::create(20, 4, 2014)],
+				[2015, Day::create(05, 4, 2015)],
+				[2016, Day::create(27, 3, 2016)],
+				[2017, Day::create(16, 4, 2017)]];
 	}
 }

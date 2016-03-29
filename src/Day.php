@@ -5,8 +5,6 @@ class Day extends \DateTime
 {
 	public $title;
 	public $link;
-	public $states = [];
-	public $regional = [];
 
 	/**
 	 * Sets the Title.
@@ -24,43 +22,11 @@ class Day extends \DateTime
 	 * Sets the Link.
 	 *
 	 * @param  string  $url
+	 * @return Day
 	 */
 	public function setLink($url) {
 		$this->link = $url;
 		return $this;
-	}
-
-	/**
-	 *
-	 * @param  string[]  $states
-	 * @param  string[]  $regional
-	 * @return Day
-	 */
-	public function setStates($states = [], $regional = [])
-	{
-		$this->states = $states;
-		$this->regional = $regional;
-		return $this;
-	}
-
-	/**
-	 *
-	 * @param  string  $state
-	 * @return boolean
-	 */
-	public function inState($state)
-	{
-		return empty($state) || empty($this->states) || \in_array($state, $this->states);
-	}
-
-	/**
-	 *
-	 * @param  string  $state
-	 * @return boolean
-	 */
-	public function isRegional($state)
-	{
-		return \in_array($state, $this->regional);
 	}
 
 	/**
@@ -99,9 +65,9 @@ class Day extends \DateTime
 	 * @link http://php.net/manual/en/function.strftime.php
 	 * @link http://php.net/manual/en/class.datetime.php
 	 *
-	 * @param  string     $format    A format string containing specifiers like <code>%a</code>,
-	 *                               <code>%B</code> etc.
-	 * @param  string     $encoding  For example 'UTF-8', 'ISO-8859-1'.
+	 * @param  string  $format    A format string containing specifiers like <code>%a</code>,
+	 *                            <code>%B</code> etc.
+	 * @param  string  $encoding  For example 'UTF-8', 'ISO-8859-1'.
 	 * @return string
 	 */
 	public function formatLoc($format, $encoding = 'UTF-8')
@@ -125,17 +91,20 @@ class Day extends \DateTime
 
 	/**
 	 *
-	 * @param  int  $delta
-	 * @return Day
+	 * @param  int|string  $day
+	 * @param  int         $month
+	 * @param  int         $year
+	 * @return \ML_Express\Calendar\Day
 	 */
-	public static function FirstOfThisYear($delta = 0)
+	public static function create($day = null, $month = null, $year = null)
 	{
-		return (new Day(date('Y-01-01')))->addYears($delta);
-	}
-
-	public static function FirstOfThisMonth($delta = 0)
-	{
-		return (new Day(date('Y-m-01')))->addMonths($delta);
+		if (\is_string($day)) {
+			return new Day($day);
+		}
+		$year = $year === null ? date('Y') : $year;
+		$month = $month === null ? date('m') : $month;
+		$day = $day === null ? date('d') : $day;
+		return new Day("$year-$month-$day");
 	}
 
 	/**
@@ -143,11 +112,11 @@ class Day extends \DateTime
 	 *
 	 * @link http://php.net/manual/en/function.easter-days.php
 	 *
-	 * @param  int    $year    For example 2016
+	 * @param  int  $year  For example 2016
 	 * @return \ML_Express\Calendar\Day
 	 */
 	public static function easter($year)
 	{
-		return (new Day("$year-03-21"))->add(new \DateInterval('P' . easter_days($year) . 'D'));
+		return Day::create(21, 3, $year)->addDays(easter_days($year));
 	}
 }
