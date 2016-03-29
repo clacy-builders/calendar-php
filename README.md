@@ -43,7 +43,6 @@ The result:
 2016-03-29
 2016-03-29
 2016-04-01
-
 ```
 
 
@@ -69,7 +68,6 @@ The result:
 2016-05-01
 2016-02-29
 2016-03-27
-
 ```
 
 
@@ -86,7 +84,6 @@ The result:
 2018-03-29
 2016-01-29
 2016-04-01
-
 ```
 
 
@@ -101,7 +98,6 @@ The result:
 ```
 2016-03-27
 2016-05-15
-
 ```
 
 
@@ -117,7 +113,6 @@ The result:
 ```
 2015-12-03    PHP 7.0 released
               http://php.net/manual/en/migration70.new-features.php
-
 ```
 
 
@@ -137,4 +132,3 @@ Sonntag, 5. Juni 2016
 
 ### The `Calendar` class
 See https://github.com/ml-express/html5-express-php/wiki/Calendar
-
