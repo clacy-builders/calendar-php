@@ -41,6 +41,24 @@ class DayTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @dataProvider workdayProvider
+	 */
+	public function testWorkday($date, $expected)
+	{
+		$actual = Day::create($date)->workday();
+		$expected = Day::create($expected);
+		$this->assertEquals($expected, $actual);
+	}
+
+	public function workdayProvider()
+	{
+		return [['2016-03-04', '2016-03-04'],
+				['2016-03-05', '2016-03-04'],
+				['2016-03-06', '2016-03-07'],
+				['2016-03-07', '2016-03-07']];
+	}
+
+	/**
 	 * @dataProvider formatLocProvider
 	 */
 	public function testFormatLoc($format, $expected)

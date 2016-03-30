@@ -60,6 +60,19 @@ class Day extends \DateTime
 	}
 
 	/**
+	 * Returns the nearest workday.
+	 *
+	 * @return \ML_Express\Calendar\Day
+	 */
+	public function workday()
+	{
+		$weekday = $this->format('N');
+		if ($weekday == 7) return $this->addDays(1);
+		if ($weekday == 6) return $this->addDays(-1);
+		return $this;
+	}
+
+	/**
 	 * Returns a string representation according to locale settings.
 	 *
 	 * @link http://php.net/manual/en/function.strftime.php
