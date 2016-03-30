@@ -19,6 +19,120 @@ Run `composer install` or `composer update`.
 
 ## Basic Usage
 
+### The `Calendar` class
+
+```php
+<?php
+require_once 'vendor/autoload.php';
+
+use \ML_Express\Calendar\Calendar;
+use \ML_Express\Calendar\Day;
+
+setlocale(LC_TIME, 'de');
+$easter = Day::easter(2016);
+$calendar = Calendar::month(5, 2016)
+        ->setMonthFormat('%b %Y')
+        ->setFirstWeekday('DE')
+        ->addEntries([
+                Day::create(1, 5, 2016)->setTitle('Tag der Arbeit'),
+                $easter->copy()->addDays(39)->setTitle('Christi Himmelfahrt'),
+                $easter->copy()->addDays(50)->setTitle('Pfingstmontag'),
+                $easter->copy()->addDays(60)->setTitle('Fronleichnam')]);
+print json_encode($calendar->buildArray(), JSON_PRETTY_PRINT);
+
+```
+
+The generated JSON text:
+
+```json
+{
+    "weekdays": {
+        "mon": "Mo",
+        "tue": "Di",
+        "wed": "Mi",
+        "thu": "Do",
+        "fri": "Fr",
+        "sat": "Sa",
+        "sun": "So"
+    },
+    "years": [
+        {
+            "time": "2016",
+            "label": "2016",
+            "months": [
+                {
+                    "time": "2016-05",
+                    "label": "Mai 2016",
+                    "month": "05",
+                    "weeks": [
+                        {
+                            "time": "2016-W17",
+                            "label": "17",
+                            "leading": 6,
+                            "days": [
+                                {
+                                    "time": "2016-05-01",
+                                    "label": "1",
+                                    "weekday": "sun",
+                                    "entries": [
+                                        {
+                                            "class": "holiday",
+                                            "title": "Tag der Arbeit"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "time": "2016-W18",
+                            "label": "18",
+                            "days": [
+                                {
+                                    "time": "2016-05-02",
+                                    "label": "2",
+                                    "weekday": "mon"
+                                },
+                                {
+                                    "time": "2016-05-03",
+                                    "label": "3",
+                                    "weekday": "tue"
+                                },
+                                {
+                                    "time": "2016-05-04",
+                                    "label": "4",
+                                    "weekday": "wed"
+                                },
+                                {
+                                    "time": "2016-05-05",
+                                    "label": "5",
+                                    "weekday": "thu",
+                                    "entries": [
+                                        {
+                                            "class": "holiday",
+                                            "title": "Christi Himmelfahrt"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "time": "2016-05-06",
+                                    "label": "6",
+                                    "weekday": "fri"
+                                },
+                                {
+                                    "time": "2016-05-07",
+                                    "label": "7",
+                                    "weekday": "sat"
+                                },
+                                {
+                                    "time": "2016-05-08",
+
+…
+
+```
+
+See also: https://github.com/ml-express/html5-express-php/wiki/Calendar
+
+
 ### The `Day` class
 
 ```php
@@ -41,7 +155,7 @@ The result:
 
 ```
 2016-03-29
-2016-03-29
+2016-03-30
 2016-04-01
 ```
 
@@ -64,7 +178,7 @@ The result:
 2016-03-29
 2016-03-29
 2016-03-29
-2016-03-29
+2016-03-30
 2016-05-01
 2016-02-29
 2016-03-27
@@ -76,6 +190,7 @@ The result:
 $days[] = Day::create('2016-03-29')->addYears(2);
 $days[] = Day::create('2016-03-29')->addMonths(-2);
 $days[] = Day::create('2016-03-29')->addDays(3);
+$days[] = Day::create('2016-03-26')->workday();
 ```
 
 The result:
@@ -84,6 +199,7 @@ The result:
 2018-03-29
 2016-01-29
 2016-04-01
+2016-03-25
 ```
 
 
@@ -130,5 +246,3 @@ Sonntag, 5. Juni 2016
 ```
 
 
-### The `Calendar` class
-See https://github.com/ml-express/html5-express-php/wiki/Calendar
