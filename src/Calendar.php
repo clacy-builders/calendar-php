@@ -1,7 +1,7 @@
 <?php
 namespace ML_Express\Calendar;
 
-use ML_Express\Calendar\Day;
+use ML_Express\Calendar\DateTime;
 
 class Calendar
 {
@@ -23,15 +23,15 @@ class Calendar
 	 *
 	 * You may use the static <code>span</code> method instead.
 	 *
-	 * @param  Day|string  $from  First day which should be shown on the calendar.<br>
-	 *                            A string of the format <code>Y-m-d</code> or a
-	 *                            <code>DateTime</code> object.
-	 * @param  Day|string  $till  Last day which should be shown on the calendar.
+	 * @param  DateTime|string  $from  First day which should be shown on the calendar.<br>
+	 *                                 A string of the format <code>Y-m-d</code> or a
+	 *                                 <code>DateTime</code> object.
+	 * @param  DateTime|string  $till  Last day which should be shown on the calendar.
 	 */
 	public function __construct($from, $till)
 	{
-		$this->from = \is_string($from) ? new Day($from) : $from;
-		$this->till = \is_string($till) ? new Day($till) : $till;
+		$this->from = DateTime::create($from);
+		$this->till = DateTime::create($till);
 		$this->entries = [];
 		$this->setDayFormat()->setMonthFormat()->setYearFormat()->setWeekdayFormat();
 		$this->setFirstWeekday();
@@ -40,10 +40,10 @@ class Calendar
 	/**
 	 * Returns a <code>Calendar</code> object.
 	 *
-	 * @param  Day|string  $from  First day which should be shown on the calendar.<br>
-	 *                            A string of the format <code>Y-m-d</code> or a
-	 *                            <code>DateTime</code> object.
-	 * @param  Day|string  $till  Day after the last day which should be shown on the calendar.
+	 * @param  DateTime|string  $from  First day which should be shown on the calendar.<br>
+	 *                                 A string of the format <code>Y-m-d</code> or a
+	 *                                 <code>DateTime</code> object.
+	 * @param  DateTime|string  $till  Last day which should be shown on the calendar.
 	 * @return Calendar
 	 */
 	public static function span($from, $till)
@@ -59,7 +59,7 @@ class Calendar
 	 */
 	public static function year($year = null)
 	{
-		$from = Day::create(1, 1, $year);
+		$from = DateTime::create(1, 1, $year);
 		$till = $from->copy()->addYears(1)->addDays(-1);
 		return new Calendar($from, $till);
 	}
@@ -90,7 +90,7 @@ class Calendar
 	public static function months($count = 1, $month = null, $year = null)
 	{
 		$delta = (abs($count) - 1) * (($count > 0) - ($count < 0));
-		$from = Day::create(1, $month, $year);
+		$from = DateTime::create(1, $month, $year);
 		$till = $from->copy()->addMonths(1);
 		if ($delta > 0) {
 			$till->addMonths($delta);
@@ -175,24 +175,21 @@ class Calendar
 	}
 
 	/**
-	 * Adds calendar entries (for example holidays).
+	 * Adds  a entry (for example a holiday).
 	 *
-	 * @param  Day[]   $entries
-	 * @param  string  $class
+	 * @param  DateTime   $date
+	 * @param  string            $class
 	 * @return Calendar
 	 */
-	public function addEntries($entries, $class = 'holiday')
+	public function addEntry($date, $title, $link = null, $class = 'holiday')
 	{
-		if (!\is_array($entries)) {
-			$entries = [$entries];
+		if (\is_string($date)) {
+			$date = DateTime::create($date);
 		}
-		foreach ($entries as $entry) {
-			$this->entries[$entry->format('Y-m-d')][] = array_filter(array(
+		$this->entries[$date->format('Y-m-d')][] = array_filter([
 				'class' => $class,
-				'title' => $entry->title,
-				'link' => $entry->link
-			));
-		}
+				'title' => $title,
+				'link' => $link]);
 		return $this;
 	}
 
@@ -238,7 +235,7 @@ class Calendar
 			if ($first || ($d == 1 && $m == 1)) {
 				$year = array(
 					'time' => $y,
-					'label' => $day->formatLoc($this->yearFormat),
+					'label' => $day->localized($this->yearFormat),
 					'months' => []
 				);
 			}
@@ -246,7 +243,7 @@ class Calendar
 			if ($first || $d == 1) {
 				$month = array(
 					'time' => "$y-$m",
-					'label' => $day->formatLoc($this->monthFormat),
+					'label' => $day->localized($this->monthFormat),
 					'month' => $m,
 					'weeks' => []
 				);
@@ -265,7 +262,7 @@ class Calendar
 			// day
 			$week['days'][] = array_filter(array(
 				'time' => $iso,
-				'label' => $day->formatLoc($this->dayFormat),
+				'label' => $day->localized($this->dayFormat),
 				'weekday' => \strtolower($day->format('D')),
 				'entries' => \array_key_exists($iso, $this->entries) ? $this->entries[$iso] : null
 			));
@@ -326,14 +323,14 @@ class Calendar
 	{
 		if ($this->buildWeekdays) {
 			$this->weekdays = [];
-			$day = (new Day('2014-01-06'))->addDays($this->firstWeekday);
+			$day = (new DateTime('2014-01-06'))->addDays($this->firstWeekday);
 			for ($i = 0; $i < 7; $i++) {
 				$index = \strtolower($day->format('D'));
 				if (\is_array($this->weekdayFormat)) {
 					$this->weekdays[$index] = $this->weekdayFormat[($i + $this->firstWeekday) % 7];
 				}
 				else {
-					$this->weekdays[$index] = $day->formatLoc(
+					$this->weekdays[$index] = $day->localized(
 							$this->weekdayFormat, self::CHARACTER_ENCODING);
 				}
 				$day->addDays(1);

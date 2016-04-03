@@ -3,7 +3,7 @@ namespace ML_Express\Calendar\Tests;
 
 require_once __DIR__ . '/../allIncl.php';
 
-use ML_Express\Calendar\Day;
+use ML_Express\Calendar\DateTime;
 use ML_Express\Calendar\Calendar;
 
 class CalendarTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 	public function yearProvider()
 	{
 		return array(
-			[null, Calendar::span(Day::create(1, 1), Day::create(31, 12))],
+			[null, Calendar::span(DateTime::create(1, 1), DateTime::create(31, 12))],
 			[2016, Calendar::span('2016-01-01', '2016-12-31')]
 		);
 	}
@@ -39,8 +39,8 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 		$year = date('Y');
 		return array(
 			[null, null, Calendar::span(
-					Day::create(1),
-					Day::create(1)->modify('last day of this month'))],
+					DateTime::create(1),
+					DateTime::create(1)->modify('last day of this month'))],
 			[4, null, Calendar::span("$year-04-01", "$year-04-30")],
 			[2, 2016, Calendar::span("2016-02-01", "2016-02-29")]
 		);
@@ -59,27 +59,28 @@ class CalendarTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			[0, null, null, Calendar::span(
-					Day::create(1),
-					Day::create(1)->modify('last day of this month'))],
+					DateTime::create(1),
+					DateTime::create(1)->modify('last day of this month'))],
 			[-1, null, null, Calendar::span(
-					Day::create(1),
-					Day::create(1)->modify('last day of this month'))],
+					DateTime::create(1),
+					DateTime::create(1)->modify('last day of this month'))],
 			[+1, null, null, Calendar::span(
-					Day::create(1),
-					Day::create(1)->modify('last day of this month'))],
+					DateTime::create(1),
+					DateTime::create(1)->modify('last day of this month'))],
 			[-3, null, null, Calendar::span(
-					Day::create(1)->addMonths(-2),
-					Day::create(1)->modify('last day of this month'))],
+					DateTime::create(1)->addMonths(-2),
+					DateTime::create(1)->modify('last day of this month'))],
 			[+2, null, null, Calendar::span(
-					Day::create(1),
-					Day::create(1)->addMonths(1)->modify('last day of this month'))]
+					DateTime::create(1),
+					DateTime::create(1)->addMonths(1)->modify('last day of this month'))]
 		);
 	}
 
 	public function testBuildArray()
 	{
-		$holiday = (new Day('2016-01-30'))->setTitle('International PHP Day');
-		$actual = Calendar::span('2015-12-29', '2016-02-01')->addEntries($holiday)->buildArray();
+		$actual = Calendar::span('2015-12-29', '2016-02-01')
+				->addEntry('2016-01-30', 'International PHP Day')
+				->buildArray();
 		$expected = array(
 			'weekdays' => array(
 				'mon' => 'Mon', 'tue' => 'Tue', 'wed' => 'Wed', 'thu' => 'Thu',

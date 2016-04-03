@@ -26,18 +26,17 @@ Run `composer install` or `composer update`.
 require_once 'vendor/autoload.php';
 
 use \ML_Express\Calendar\Calendar;
-use \ML_Express\Calendar\Day;
+use \ML_Express\Calendar\DateTime;
 
 setlocale(LC_TIME, 'de');
-$easter = Day::easter(2016);
+$easter = DateTime::easter(2016);
 $calendar = Calendar::month(5, 2016)
         ->setMonthFormat('%b %Y')
         ->setFirstWeekday('DE')
-        ->addEntries([
-                Day::create(1, 5, 2016)->setTitle('Tag der Arbeit'),
-                $easter->copy()->addDays(39)->setTitle('Christi Himmelfahrt'),
-                $easter->copy()->addDays(50)->setTitle('Pfingstmontag'),
-                $easter->copy()->addDays(60)->setTitle('Fronleichnam')]);
+        ->addEntry('2016-05-01', 'Tag der Arbeit')
+        ->addEntry($easter->copy()->addDays(39), 'Christi Himmelfahrt')
+        ->addEntry($easter->copy()->addDays(50), 'Pfingstmontag')
+        ->addEntry($easter->copy()->addDays(60), 'Fronleichnam');
 print json_encode($calendar->buildArray(), JSON_PRETTY_PRINT);
 
 ```
@@ -133,110 +132,108 @@ The generated JSON text:
 See also: https://github.com/ml-express/html5-express-php/wiki/Calendar
 
 
-### The `Day` class
+### The `DateTime` class
 
 ```php
 require_once 'vendor/autoload.php';
-use \ML_Express\Calendar\Day;
+use \ML_Express\Calendar\DateTime;
 ```
 
 
 #### Constructor
 
-`Day` extends the standard PHP class `DateTime`.
-Assuming that current date is 2016-03-29:
+`DateTime` extends the standard PHP class
+DateTime.
+
+Assuming that current date is
+Sun, 03 Apr 2016 15:00:49 +0200:
 ```php
-$days[] = new Day('2016-03-29');
-$days[] = new Day();
-$days[] = new Day('first day of next month');
+$days[] = new DateTime('2016-03-29');
+$days[] = new DateTime();
+$days[] = new DateTime('first day of next month');
 ```
 
 The result:
 
 ```
-2016-03-29
-2016-03-30
-2016-04-01
+Tue, 29 Mar 2016 00:00:00 +0200
+Sun, 03 Apr 2016 15:00:49 +0200
+Sun, 01 May 2016 15:00:49 +0200
 ```
 
 
 #### Factory Methods
-Assuming that current date is 2016-03-29:
+Assuming that current date is
+Sun, 03 Apr 2016 15:00:49 +0200:
 ```php
-$days[] = Day::create(29, 3, 2016);
-$days[] = Day::create(29, 3);
-$days[] = Day::create(29);
-$days[] = Day::create();
-$days[] = Day::create('2016-05-01');
-$days[] = Day::create('last day of previous month');
-$days[] = Day::easter(2016);
+$days[] = DateTime::create(29, 3, 2016);
+$days[] = DateTime::create(29, 3);
+$days[] = DateTime::create(29);
+$days[] = DateTime::create();
+$days[] = DateTime::create('2016-05-01');
+$days[] = DateTime::create('last day of previous month');
+$days[] = DateTime::easter(2016);
 ```
 
 The result:
 
 ```
-2016-03-29
-2016-03-29
-2016-03-29
-2016-03-30
-2016-05-01
-2016-02-29
-2016-03-27
+Tue, 29 Mar 2016 00:00:00 +0200
+Tue, 29 Mar 2016 00:00:00 +0200
+Fri, 29 Apr 2016 00:00:00 +0200
+Sun, 03 Apr 2016 00:00:00 +0200
+Sun, 01 May 2016 00:00:00 +0200
+Thu, 31 Mar 2016 15:00:49 +0200
+Sun, 27 Mar 2016 00:00:00 +0100
 ```
 
 
 #### Modify Dates
 ```php
-$days[] = Day::create('2016-03-29')->addYears(2);
-$days[] = Day::create('2016-03-29')->addMonths(-2);
-$days[] = Day::create('2016-03-29')->addDays(3);
-$days[] = Day::create('2016-03-26')->workday();
+$days[] = DateTime::create('2016-03-29')->addYears(2);
+$days[] = DateTime::create('2016-03-29')->addMonths(-2);
+$days[] = DateTime::create('2016-03-29')->addDays(3);
+$days[] = DateTime::create('2016-04-01')->workday();
+$days[] = DateTime::create('2016-04-02')->workday();
+$days[] = DateTime::create('2016-04-03')->workday();
+$days[] = DateTime::create('2016-04-04')->workday();
 ```
 
 The result:
 
 ```
-2018-03-29
-2016-01-29
-2016-04-01
-2016-03-25
+Thu, 29 Mar 2018 00:00:00 +0200
+Fri, 29 Jan 2016 00:00:00 +0100
+Fri, 01 Apr 2016 00:00:00 +0200
+Fri, 01 Apr 2016 00:00:00 +0200
+Fri, 01 Apr 2016 00:00:00 +0200
+Mon, 04 Apr 2016 00:00:00 +0200
+Mon, 04 Apr 2016 00:00:00 +0200
 ```
 
 
 #### Clone with the `copy` method
 ```php
-$easter = Day::easter(2016);
+$easter = DateTime::easter(2016);
 $pentecost = $easter->copy()->addDays(49);
 ```
 
 The result:
 
 ```
-2016-03-27
-2016-05-15
+Sun, 27 Mar 2016 00:00:00 +0100
+Sun, 15 May 2016 00:00:00 +0200
 ```
 
 
-#### Set title and link
-```php
-$day = Day::create('2015-12-03')
-        ->setTitle('PHP 7.0 released')
-        ->setLink('http://php.net/manual/en/migration70.new-features.php');
-```
-
-The result:
-
-```
-2015-12-03    PHP 7.0 released
-              http://php.net/manual/en/migration70.new-features.php
-```
-
-
-#### The `formatLoc` method
+#### The `localized` method
+This method returns a string representation according to locale settings.
+http://php.net/manual/en/function.strftime.php lists the specifiers you can use
+in the format string.
 ```php
 setlocale(LC_TIME, 'de');
-$date = Day::create('2016-06-05');
-print $date->formatLoc('%A, %#d. %B %Y');
+$date = DateTime::create('2016-06-05');
+print $date->localized('%A, %#d. %B %Y');
 ```
 
 The result:
@@ -244,5 +241,3 @@ The result:
 ```
 Sonntag, 5. Juni 2016
 ```
-
-
