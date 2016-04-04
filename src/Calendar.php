@@ -235,7 +235,7 @@ class Calendar
 			if ($first || ($d == 1 && $m == 1)) {
 				$year = array(
 					'time' => $y,
-					'label' => $day->localized($this->yearFormat),
+					'label' => $day->formatLocalized($this->yearFormat, self::CHARACTER_ENCODING),
 					'months' => []
 				);
 			}
@@ -243,7 +243,7 @@ class Calendar
 			if ($first || $d == 1) {
 				$month = array(
 					'time' => "$y-$m",
-					'label' => $day->localized($this->monthFormat),
+					'label' => $day->formatLocalized($this->monthFormat, self::CHARACTER_ENCODING),
 					'month' => $m,
 					'weeks' => []
 				);
@@ -262,7 +262,7 @@ class Calendar
 			// day
 			$week['days'][] = array_filter(array(
 				'time' => $iso,
-				'label' => $day->localized($this->dayFormat),
+				'label' => $day->formatLocalized($this->dayFormat, self::CHARACTER_ENCODING),
 				'weekday' => \strtolower($day->format('D')),
 				'entries' => \array_key_exists($iso, $this->entries) ? $this->entries[$iso] : null
 			));
@@ -330,8 +330,8 @@ class Calendar
 					$this->weekdays[$index] = $this->weekdayFormat[($i + $this->firstWeekday) % 7];
 				}
 				else {
-					$this->weekdays[$index] = $day->localized(
-							$this->weekdayFormat, self::CHARACTER_ENCODING);
+					$this->weekdays[$index] = $day
+							->formatLocalized($this->weekdayFormat, self::CHARACTER_ENCODING);
 				}
 				$day->addDays(1);
 			}

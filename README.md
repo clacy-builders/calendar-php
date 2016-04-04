@@ -146,7 +146,7 @@ use \ML_Express\Calendar\DateTime;
 DateTime.
 
 Assuming that current date is
-Sun, 03 Apr 2016 15:00:49 +0200:
+Mon, 04 Apr 2016 16:22:02 +0200:
 ```php
 $days[] = new DateTime('2016-03-29');
 $days[] = new DateTime();
@@ -157,20 +157,26 @@ The result:
 
 ```
 Tue, 29 Mar 2016 00:00:00 +0200
-Sun, 03 Apr 2016 15:00:49 +0200
-Sun, 01 May 2016 15:00:49 +0200
+Mon, 04 Apr 2016 16:22:02 +0200
+Sun, 01 May 2016 16:22:02 +0200
 ```
 
 
 #### Factory Methods
 Assuming that current date is
-Sun, 03 Apr 2016 15:00:49 +0200:
+Mon, 04 Apr 2016 16:22:02 +0200:
 ```php
 $days[] = DateTime::create(29, 3, 2016);
 $days[] = DateTime::create(29, 3);
 $days[] = DateTime::create(29);
+$days[] = DateTime::create(2016, 3, 29);
+$days[] = DateTime::create(2016, 3);
+$days[] = DateTime::create(2016);
 $days[] = DateTime::create();
-$days[] = DateTime::create('2016-05-01');
+$days[] = DateTime::create('2016-03-29');
+$days[] = DateTime::create('2016-03');
+$days[] = DateTime::create('29.03.2016');
+$days[] = DateTime::create('03/29/2016');
 $days[] = DateTime::create('last day of previous month');
 $days[] = DateTime::easter(2016);
 ```
@@ -181,9 +187,15 @@ The result:
 Tue, 29 Mar 2016 00:00:00 +0200
 Tue, 29 Mar 2016 00:00:00 +0200
 Fri, 29 Apr 2016 00:00:00 +0200
-Sun, 03 Apr 2016 00:00:00 +0200
-Sun, 01 May 2016 00:00:00 +0200
-Thu, 31 Mar 2016 15:00:49 +0200
+Tue, 29 Mar 2016 00:00:00 +0200
+Fri, 04 Mar 2016 00:00:00 +0100
+Mon, 04 Apr 2016 00:00:00 +0200
+Mon, 04 Apr 2016 00:00:00 +0200
+Tue, 29 Mar 2016 00:00:00 +0200
+Tue, 01 Mar 2016 00:00:00 +0100
+Tue, 29 Mar 2016 00:00:00 +0200
+Tue, 29 Mar 2016 00:00:00 +0200
+Thu, 31 Mar 2016 16:22:02 +0200
 Sun, 27 Mar 2016 00:00:00 +0100
 ```
 
@@ -193,10 +205,10 @@ Sun, 27 Mar 2016 00:00:00 +0100
 $days[] = DateTime::create('2016-03-29')->addYears(2);
 $days[] = DateTime::create('2016-03-29')->addMonths(-2);
 $days[] = DateTime::create('2016-03-29')->addDays(3);
-$days[] = DateTime::create('2016-04-01')->workday();
-$days[] = DateTime::create('2016-04-02')->workday();
-$days[] = DateTime::create('2016-04-03')->workday();
-$days[] = DateTime::create('2016-04-04')->workday();
+$days[] = DateTime::create('2016-04-01')->forceWorkday();
+$days[] = DateTime::create('2016-04-02')->forceWorkday();
+$days[] = DateTime::create('2016-04-03')->forceWorkday();
+$days[] = DateTime::create('2016-04-04')->forceWorkday();
 ```
 
 The result:
@@ -226,14 +238,14 @@ Sun, 15 May 2016 00:00:00 +0200
 ```
 
 
-#### The `localized` method
+#### The `formatLocalized` method
 This method returns a string representation according to locale settings.
 http://php.net/manual/en/function.strftime.php lists the specifiers you can use
 in the format string.
 ```php
 setlocale(LC_TIME, 'de');
 $date = DateTime::create('2016-06-05');
-print $date->localized('%A, %#d. %B %Y');
+print $date->formatLocalized('%A, %#d. %B %Y');
 ```
 
 The result:

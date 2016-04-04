@@ -38,7 +38,7 @@ class DateTime extends \DateTime
 	 *
 	 * @return DateTime
 	 */
-	public function workday()
+	public function forceWorkday()
 	{
 		$weekday = $this->format('N');
 		if ($weekday == 7) return $this->addDays(1);
@@ -57,7 +57,7 @@ class DateTime extends \DateTime
 	 * @param  string  $encoding  For example 'UTF-8', 'ISO-8859-1'.
 	 * @return string
 	 */
-	public function localized($format, $encoding = 'UTF-8')
+	public function formatLocalized($format, $encoding = 'UTF-8')
 	{
 		$str = strftime($format, $this->getTimestamp());
 		if ($encoding == 'UTF-8') {
@@ -90,6 +90,9 @@ class DateTime extends \DateTime
 		}
 		if ($day instanceof \DateTime) {
 			return new DateTime($day->format('Y-m-d'));
+		}
+		if ($day > 31) {
+			$swap = $day; $day = $year; $year = $swap;
 		}
 		$year = $year === null ? date('Y') : $year;
 		$month = $month === null ? date('m') : $month;

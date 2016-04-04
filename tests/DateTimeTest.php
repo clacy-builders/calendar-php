@@ -9,36 +9,36 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 {
 	public function testAddDays()
 	{
-		$actual = DateTime::create(1, 1, 2016)->addDays(-1)->addDays(2);
+		$actual = DateTime::create(1, 1, 2016)->addDays(-1)->addDays(2)->addDays(0);
 		$expected = DateTime::create(2, 1, 2016);
 		$this->assertEquals($expected, $actual);
 	}
 
 	public function testAddMonths()
 	{
-		$actual = DateTime::create(31, 1, 2016)->addMonths(1)->addMonths(-2);
+		$actual = DateTime::create(31, 1, 2016)->addMonths(1)->addMonths(-2)->addMonths(0);
 		$expected = DateTime::create(2, 1, 2016);
 		$this->assertEquals($expected, $actual);
 	}
 
 	public function testAddYears()
 	{
-		$actual = DateTime::create(29, 2, 2016)->addYears(1)->addYears(-2);
+		$actual = DateTime::create(29, 2, 2016)->addYears(1)->addYears(-2)->addYears(0);
 		$expected = DateTime::create(1, 3, 2015);
 		$this->assertEquals($expected, $actual);
 	}
 
 	/**
-	 * @dataProvider workdayProvider
+	 * @dataProvider forceWorkdayProvider
 	 */
-	public function testWorkday($date, $expected)
+	public function testForceWorkday($date, $expected)
 	{
-		$actual = DateTime::create($date)->workday();
+		$actual = DateTime::create($date)->forceWorkday();
 		$expected = DateTime::create($expected);
 		$this->assertEquals($expected, $actual);
 	}
 
-	public function workdayProvider()
+	public function forceWorkdayProvider()
 	{
 		return [['2016-03-04', '2016-03-04'],
 				['2016-03-05', '2016-03-04'],
@@ -47,15 +47,15 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @dataProvider localizedProvider
+	 * @dataProvider formatLocalizedProvider
 	 */
-	public function testLocalized($format, $expected)
+	public function testFormatLocalized($format, $expected)
 	{
-		$actual = DateTime::create(1, 4, 2016)->localized($format);
+		$actual = DateTime::create(1, 4, 2016)->formatLocalized($format);
 		$this->assertSame($expected, $actual);
 	}
 
-	public function localizedProvider()
+	public function formatLocalizedProvider()
 	{
 		return [['%a', 'Fri'],
 				['%A', 'Friday'],
@@ -89,6 +89,10 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 				[1, null, null, new DateTime(date('Y-m-01'))],
 				[1, 2, null, new DateTime(date('Y-02-01'))],
 				[2, 3, 2016, new DateTime('2016-03-02')],
+				[2016, null, null, new DateTime(date('2016-m-d'))],
+				[2016, 2, null, new DateTime(date('2016-02-d'))],
+				[2016, 3, 2, new DateTime('2016-03-02')],
+				[null, 3, null, new DateTime(date('Y-03-d'))],
 				['2016-01-02', null, null, new DateTime('2016-01-02')],
 				[new \DateTime('2016-01-02'), null, null, new DateTime('2016-01-02')],
 				[new DateTime('2016-01-02'), null, null, new DateTime('2016-01-02')]
