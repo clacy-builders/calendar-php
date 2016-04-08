@@ -4,8 +4,10 @@ namespace ML_Express\Calendar;
 class DateTime extends \DateTime
 {
 	/**
+	 * Adds or subtracts years.
 	 *
-	 * @param  int  $years
+	 * @param  int  $years  The amount of years to add to or if less than 0 to subtract from
+	 *                      the current date.
 	 * @return DateTime
 	 */
 	public function addYears($years)
@@ -14,8 +16,10 @@ class DateTime extends \DateTime
 	}
 
 	/**
+	 * Adds or subtracts months.
 	 *
-	 * @param  int  $months
+	 * @param  int  $months  The amount of months to add to or if less than 0 to subtract from
+	 *                       the current date.
 	 * @return DateTime
 	 */
 	public function addMonths($months)
@@ -24,8 +28,10 @@ class DateTime extends \DateTime
 	}
 
 	/**
+	 * Adds or subtracts days.
 	 *
-	 * @param  int  $days
+	 * @param  int  $days  The amount of days to add to or if less than 0 to subtract from
+	 *                     the current date.
 	 * @return DateTime
 	 */
 	public function addDays($days)
@@ -34,15 +40,18 @@ class DateTime extends \DateTime
 	}
 
 	/**
-	 * Returns the nearest workday.
+	 * Sets the current date to the nearest or next workday.
 	 *
+	 * Sunday always becomes monday.
+	 *
+	 * @param  string  $next  if <code>true</code> saturday becomes monday, otherwise friday.
 	 * @return DateTime
 	 */
-	public function forceWorkday()
+	public function forceWorkday($next = false)
 	{
 		$weekday = $this->format('N');
-		if ($weekday == 7) return $this->addDays(1);
-		if ($weekday == 6) return $this->addDays(-1);
+		if ($weekday == 7) $this->addDays(1);
+		elseif ($weekday == 6) $next ? $this->addDays(2) : $this->addDays(-1);
 		return $this;
 	}
 

@@ -31,19 +31,23 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider forceWorkdayProvider
 	 */
-	public function testForceWorkday($date, $expected)
+	public function testForceWorkday($date, $next, $expected)
 	{
-		$actual = DateTime::create($date)->forceWorkday();
+		$actual = DateTime::create($date)->forceWorkday($next);
 		$expected = DateTime::create($expected);
 		$this->assertEquals($expected, $actual);
 	}
 
 	public function forceWorkdayProvider()
 	{
-		return [['2016-03-04', '2016-03-04'],
-				['2016-03-05', '2016-03-04'],
-				['2016-03-06', '2016-03-07'],
-				['2016-03-07', '2016-03-07']];
+		return [['2016-03-04', false, '2016-03-04'],
+				['2016-03-05', false, '2016-03-04'],
+				['2016-03-06', false, '2016-03-07'],
+				['2016-03-07', false, '2016-03-07'],
+				['2016-03-04', true, '2016-03-04'],
+				['2016-03-05', true, '2016-03-07'],
+				['2016-03-06', true, '2016-03-07'],
+				['2016-03-07', true, '2016-03-07']];
 	}
 
 	/**

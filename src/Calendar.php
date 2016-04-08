@@ -177,8 +177,10 @@ class Calendar
 	/**
 	 * Adds  a entry (for example a holiday).
 	 *
-	 * @param  DateTime   $date
-	 * @param  string            $class
+	 * @param  \DateTime  $date
+	 * @param  string     $title
+	 * @param  string     $link
+	 * @param  string     $class
 	 * @return Calendar
 	 */
 	public function addEntry($date, $title, $link = null, $class = 'holiday')
@@ -196,18 +198,40 @@ class Calendar
 	/**
 	 * The basis to generate your output.
 	 *
-	 * Keys: <code>weekdays</code>, <code>years</code><br>
-	 * Keys for <code>years</code> array items:
-	 * <code>time</code>, <code>label</code>, <code>months</code><br>
-	 * Keys for <code>months</code> array items:
-	 * <code>time</code>, <code>label</code>, <code>month</code>, <code>weeks</code><br>
-	 * Keys for <code>weeks</code> array items:
-	 * <code>time</code>, <code>label</code>, <code>leading</code>, <code>following</code>,
-	 * <code>days</code><br>
-	 * Keys for <code>days</code> array items:
-	 * <code>time</code>, <code>label</code>, <code>weekday</code>, <code>entries</code><br>
-	 * Keys for <code>entries</code> array items:
-	 * <code>title</code>, <code>link</code>
+	 * Keys:
+	 * <ul>
+	 *   <li><code>weekdays</code>
+	 *   <li><code>years</code>
+	 *   <ul>
+	 *     <li><code>time</code>
+	 *     <li><code>label</code>
+	 *     <li><code>months</code>
+	 *     <ul>
+	 *       <li><code>time</code>
+	 *       <li><code>label</code>
+	 *       <li><code>month</code>
+	 *       <li><code>weeks</code>
+	 *       <ul>
+	 *         <li><code>time</code>
+	 *         <li><code>label</code>
+	 *         <li><code>leading</code>
+	 *         <li><code>following</code>
+	 *         <li><code>days</code>
+	 *         <ul>
+	 *           <li><code>time</code>
+	 *           <li><code>label</code>
+	 *           <li><code>weekday</code>
+	 *           <li><code>entries</code>
+	 *           <ul>
+	 *             <li><code>class</code>
+	 *             <li><code>title</code>
+	 *             <li><code>link</code>
+	 *           </ul>
+	 *         </ul>
+	 *       </ul>
+	 *     </ul>
+	 *   </ul>
+	 * </ul>
 	 *
 	 * @return array
 	 */
