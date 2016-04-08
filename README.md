@@ -9,7 +9,7 @@ Add the following to your project's `composer.json` file:
 {
     "minimum-stability": "dev",
     "require": {
-        "ml-express/calendar": "dev-master@dev"
+        "ml-express/calendar": "0.1"
     }
 }
 ```
