@@ -1,4 +1,4 @@
-# ml-express/calendar
+# clacy-builders/calendar
 
 ## Installation
 
@@ -9,7 +9,7 @@ Add the following to your project's `composer.json` file:
 {
     "minimum-stability": "dev",
     "require": {
-        "ml-express/calendar": "0.1"
+        "clacy-builders/calendar": "dev-master"
     }
 }
 ```
@@ -25,8 +25,8 @@ Run `composer install` or `composer update`.
 <?php
 require_once 'vendor/autoload.php';
 
-use \ML_Express\Calendar\Calendar;
-use \ML_Express\Calendar\DateTime;
+use \ClacyBuilders\Calendar\Calendar;
+use \ClacyBuilders\Calendar\DateTime;
 
 setlocale(LC_TIME, 'de');
 $easter = DateTime::easter(2016);
@@ -129,14 +129,14 @@ The generated JSON text:
 
 ```
 
-See also: https://github.com/ml-express/html5-express-php/wiki/Calendar
+See also: https://github.com/clacy-builders/html5-express-php/wiki/Calendar
 
 
 ### The `DateTime` class
 
 ```php
 require_once 'vendor/autoload.php';
-use \ML_Express\Calendar\DateTime;
+use \ClacyBuilders\Calendar\DateTime;
 ```
 
 

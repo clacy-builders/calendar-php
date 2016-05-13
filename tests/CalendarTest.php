@@ -1,10 +1,10 @@
 <?php
-namespace ML_Express\Calendar\Tests;
+namespace ClacyBuilders\Calendar\Tests;
 
 require_once __DIR__ . '/../allIncl.php';
 
-use ML_Express\Calendar\DateTime;
-use ML_Express\Calendar\Calendar;
+use ClacyBuilders\Calendar\DateTime;
+use ClacyBuilders\Calendar\Calendar;
 
 class CalendarTest extends \PHPUnit_Framework_TestCase
 {

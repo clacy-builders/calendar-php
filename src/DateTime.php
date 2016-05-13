@@ -1,5 +1,5 @@
 <?php
-namespace ML_Express\Calendar;
+namespace ClacyBuilders\Calendar;
 
 class DateTime extends \DateTime
 {

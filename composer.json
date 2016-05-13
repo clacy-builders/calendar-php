@@ -1,5 +1,5 @@
 {
-	"name": "ml-express/calendar",
+	"name": "clacy-builders/calendar",
 	"type": "library",
 	"description": "Basic calendar classes.",
 	"license": "MIT",
@@ -9,7 +9,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"ML_Express\\Calendar\\": "src/"
+			"ClacyBuilders\\Calendar\\": "src/"
 		}
 	}
 }

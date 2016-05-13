@@ -1,7 +1,7 @@
 <?php
-namespace ML_Express\Calendar;
+namespace ClacyBuilders\Calendar;
 
-use ML_Express\Calendar\DateTime;
+use ClacyBuilders\Calendar\DateTime;
 
 class Calendar
 {
